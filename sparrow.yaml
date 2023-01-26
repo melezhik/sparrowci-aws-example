@@ -81,13 +81,13 @@ tasks:
       set -e
       sudo apt-get install -y awscli
 
-      mkdir -p ~/.aws/
-      cat << HERE > ~/.aws/config 
+      mkdir -p $HOME/.aws/
+      cat << HERE > $HOME/.aws/config 
       [default]
       region = us-east-1
       output = json
       HERE
-      cat << HERE > ~/.aws/credentials  
+      cat << HERE > $HOME/.aws/credentials  
       [default]
       aws_access_key_id=$aws_access_key_id
       aws_secret_access_key=$aws_secret_access_key
@@ -131,7 +131,7 @@ tasks:
        set -e
        sb_name=$(config sb_name)
 
-       cat ~/.aws/config
+       cat $HOME/.aws/config
 
        SubnetId=$(aws ec2 describe-subnets \
        --filters "Name=tag:Name,Values=$sb_name" \
