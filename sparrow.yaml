@@ -19,9 +19,13 @@ tasks:
         fi
     language: Raku
     init: |
-      run_task "ec2", %(
-        sn => config()<tasks><state><get-sn><state><sn-id>
-      );
+      if config()<tasks><state><get-sn><state><sn-id> {
+        run_task "ec2", %(
+          sn => config()<tasks><state><get-sn><state><sn-id>
+        );
+      } else {
+        die "subnet not found!";
+      }  
     subtasks:
       - 
          name: ec2
