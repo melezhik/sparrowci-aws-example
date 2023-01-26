@@ -133,9 +133,16 @@ tasks:
        --filters "Name=tag:Name,Values=$sb_name" \
        | yq ".subnets | .[0] | .SubnetId")
 
-       if SubnetId != "null"; then
-         echo "{ \"sn-id\": \"$SubnetId\" }" > $cache_root_dir/state.json
+       if $SubnetId != "null"; then
+         cat << HERE > $cache_root_dir/state.json
+         { 
+            "sn-id": "$SubnetId" 
+         }
+         HERE 
        else
          echo "subnet not found"
-         echo "{ \"sn-id\": \"\" }" > $cache_root_dir/state.json
+         cat << HERE > $cache_root_dir/state.json
+         { 
+            "sn-id": "" 
+         }
        fi  
