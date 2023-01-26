@@ -1,3 +1,9 @@
+images:
+  - melezhik/sparrow:debian
+secerts:
+  - aws_access_key_id
+  - aws_secret_access_key
+
 tasks:
   - 
     name: create-ec2
@@ -48,6 +54,17 @@ tasks:
             --region $region  \
             --tags "Name=$name"
     depends:
+      -
+         # install aws-cli
+         name: install-aws
+         priority: 1000
+      -
+         # create subnet
+         name: create-sn
+         config:
+            sb_name: subnet_01
+         queue: aws
+         priority: 500
       - 
          # get subnet id
          name: get-sn
@@ -55,18 +72,34 @@ tasks:
             sb_name: subnet_01
          queue: aws
          priority: 10
-      - 
-         # create subnet
-         name: create-sn
-         config:
-            sb_name: subnet_01
-         queue: aws
-         priority: 1000
+
+  - 
+     name: install-aws
+     language: Bash
+     code: |
+      set -e
+      sudo apt-get install -y python python-pip
+      sudo pip install awscli
+      mkdir -p ~/.aws/
+      cat << HERE > ~/.aws/config 
+      [default]
+      region = us-east-1
+      output = json
+      HERE
+      cat << HERE > ~/.aws/credentials  
+      [default]
+      aws_access_key_id=$aws_access_key_id
+      aws_secret_access_key=$aws_secret_access_key
+      HERE
+
+      wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq
+      chmod +x yq
+      sudo mv yq /usr/bin/
   - 
      name: create-sn
      config:
         cidr_block: 10.0.0.0/24
-        vpc_id: vpc-000111222
+        vpc_id: vpc-93c359f7
      language: Raku
      init: |
       run_task "create" unless config()<tasks><get-sn><state><sn-id>;
@@ -97,7 +130,7 @@ tasks:
 
        SubnetId=$(aws ec2 describe-subnets \
        --filters "Name=tag:Name,Values=$sb_name" \
-       | yq ‘.subnets | .[0] | .SubnetId’)
+       | yq ".subnets | .[0] | .SubnetId")
 
        if SubnetId != "null"; then
          echo "{ \"sn-id\": \"$SubnetId\" }" > $cache_root_dir/state.json
