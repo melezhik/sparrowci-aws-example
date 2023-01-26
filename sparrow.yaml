@@ -79,8 +79,8 @@ tasks:
      language: Bash
      code: |
       set -e
-      sudo apt-get install -y python3-pip
-      sudo pip3 install awscli
+      sudo apt-get install -y awscli
+
       mkdir -p ~/.aws/
       cat << HERE > ~/.aws/config 
       [default]
@@ -93,9 +93,10 @@ tasks:
       aws_secret_access_key=$aws_secret_access_key
       HERE
 
+      set -x
       curl -sf https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o yq
-      chmod +x yq
-      sudo mv yq /usr/bin/
+      chmod a+x yq
+      sudo mv yq /usr/bin/yq
   - 
      name: create-sn
      config:
