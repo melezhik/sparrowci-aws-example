@@ -94,8 +94,9 @@ tasks:
       HERE
 
       set -x
-      curl -sf https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o yq
+      curl -sfL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o yq
       chmod a+x yq
+      ls -l yq
       sudo mv yq /usr/bin/yq
   - 
      name: create-sn
@@ -129,6 +130,8 @@ tasks:
      code: |
        set -e
        sb_name=$(config sb_name)
+
+       cat ~/.aws/config
 
        SubnetId=$(aws ec2 describe-subnets \
        --filters "Name=tag:Name,Values=$sb_name" \
