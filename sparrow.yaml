@@ -41,7 +41,7 @@ tasks:
            --count 1 \
            --instance-type t2.micro  \
            --subnet-id $sn \
-           | yq ‘.Instances | .[0] | .InstanceId’)
+           | yq ".Instances | .[0] | .InstanceId")
 
            aws ec2 create-tags \
             --resources $id \
