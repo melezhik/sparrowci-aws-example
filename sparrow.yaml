@@ -14,13 +14,17 @@ tasks:
       image: ami-0e322da50e0e90e21
     language: Raku
     init: |
-      if config()<tasks><state><get-sn><state><sn-id> {
-        run_task "ec2", %(
-          sn => config()<tasks><state><get-sn><state><sn-id>
-        );
+      if config()<tasks><state><get-ec2><state><id> {
+        set_stdout("instance already created");
       } else {
-        die "subnet not found!";
-      }  
+        if config()<tasks><state><get-sn><state><sn-id> {
+            run_task "ec2", %(
+              sn => config()<tasks><state><get-sn><state><sn-id>
+            );
+        } else {
+          die "subnet not found!";
+        }  
+      }
     subtasks:
       - 
          name: ec2
@@ -48,6 +52,12 @@ tasks:
          name: install-aws
          priority: 1000
          queue: aws
+      -  # get ec2
+         name: get-ec2
+         queue: aws
+         priority: 700
+         config:
+          name: host_01
       -
          # create subnet
          name: create-sn
@@ -142,4 +152,20 @@ tasks:
          }
        HERE
        fi  
+  -
+    name: get-ec2
+    language: Bash
+    code: |
+       name=$(config name)
+       instance_id=$(aws ec2 describe-instances \
+          --filters "Name=tag:Name,Values=$name" \
+          | yq ".Reservations | .[0] | .Instances \
+          | .[0]| .InstanceId")
+       if test "$instance_id" != "null"; then
+          echo "{ \"id\": \"$instance_id\" }" \
+          > $cache_root_dir/state.json 
+       else
+          echo "{ \"id\": \"\" }" \
+          > $cache_root_dir/state.json 
+       fi
 
