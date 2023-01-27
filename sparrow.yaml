@@ -119,7 +119,7 @@ tasks:
           vpc_id=$(config vpc_id)
 
           aws ec2 create-subnet --vpc-id $vpc_id --cidr-block $cidr_block \
-          --tag-specifications ResourceType=subnet,Tags=[{Key=Name,Value=$sb_name}]
+          --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=$sb_name}]'
      depends:
       -
         name: get-sn
@@ -152,6 +152,7 @@ tasks:
             "sn-id": "" 
          }
        HERE
+        echo "hhhhh"
        fi  
   -
     name: get-ec2
