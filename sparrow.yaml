@@ -20,7 +20,7 @@ tasks:
            --filters "Name=tag:Name,Values=$name" \
            | yq ".Reservations | .[0] | .Instances \
            | .[0]| .InstanceId")
-        if test "$instance_id" != null; then
+        if test "$instance_id" != "null"; then
            echo "{ \"status\": \"skip\" }" \
            > $cache_root_dir/state.json 
         fi
