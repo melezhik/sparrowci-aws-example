@@ -145,12 +145,12 @@ tasks:
          { 
             "sn-id": "$SubnetId" 
          }
-         HERE 
+       HERE 
        else
          echo "subnet not found"
          cat << HERE > $cache_root_dir/state.json
          { 
             "sn-id": "" 
          }
-         HERE
+       HERE
        fi  
