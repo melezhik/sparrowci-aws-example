@@ -59,6 +59,7 @@ tasks:
          # install aws-cli
          name: install-aws
          priority: 1000
+         queue: aws
       -
          # create subnet
          name: create-sn
@@ -81,13 +82,13 @@ tasks:
       set -e
       sudo apt-get install -y awscli
 
-      mkdir -p $HOME/.aws/
-      cat << HERE > $HOME/.aws/config 
+      mkdir -p ~/.aws/
+      cat << HERE > ~/.aws/config 
       [default]
       region = us-east-1
       output = json
       HERE
-      cat << HERE > $HOME/.aws/credentials  
+      cat << HERE > ~/.aws/credentials  
       [default]
       aws_access_key_id=$aws_access_key_id
       aws_secret_access_key=$aws_secret_access_key
@@ -131,7 +132,7 @@ tasks:
        set -e
        sb_name=$(config sb_name)
 
-       cat $HOME/.aws/config
+       cat ~/.aws/config
 
        SubnetId=$(aws ec2 describe-subnets \
        --filters "Name=tag:Name,Values=$sb_name" \
