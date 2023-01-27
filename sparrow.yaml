@@ -20,7 +20,7 @@ tasks:
            --filters "Name=tag:Name,Values=$name" \
            | yq ".Reservations | .[0] | .Instances \
            | .[0]| .InstanceId")
-        if $instance_id != null; then
+        if test "$instance_id" != null; then
            echo "{ \"status\": \"skip\" }" \
            > $cache_root_dir/state.json 
         fi
@@ -140,7 +140,7 @@ tasks:
        --filters "Name=tag:Name,Values=$sb_name" \
        | yq ".subnets | .[0] | .SubnetId")
 
-       if $SubnetId != "null"; then
+       if test "$SubnetId" != "null"; then
          cat << HERE > $cache_root_dir/state.json
          { 
             "sn-id": "$SubnetId" 
