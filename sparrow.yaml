@@ -99,6 +99,8 @@ tasks:
       chmod a+x yq
       ls -l yq
       sudo mv yq /usr/bin/yq
+      
+      cat ~/.aws/config 
   - 
      name: create-sn
      config:
