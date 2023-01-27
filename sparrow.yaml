@@ -12,18 +12,6 @@ tasks:
     config:
       name: host_01
       image: ami-0e322da50e0e90e21
-    if:
-       language: Bash
-       code: |
-        name=$(config name)
-        instance_id=$(aws ec2 describe-instances \
-           --filters "Name=tag:Name,Values=$name" \
-           | yq ".Reservations | .[0] | .Instances \
-           | .[0]| .InstanceId")
-        if test "$instance_id" != "null"; then
-           echo "{ \"status\": \"skip\" }" \
-           > $cache_root_dir/state.json 
-        fi
     language: Raku
     init: |
       if config()<tasks><state><get-sn><state><sn-id> {
