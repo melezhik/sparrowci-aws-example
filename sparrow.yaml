@@ -127,33 +127,9 @@ tasks:
           sb_name: subnet_01
   - 
      name: get-sn
-     language: Bash
-     code: |
-       set -x
-       sb_name=$(config sb_name)
-
-       cat ~/.aws/config
-
-       SubnetId=$(aws ec2 describe-subnets \
-       --filters "Name=tag:Name,Values=$sb_name" \
-       | yq ".subnets | .[0] | .SubnetId")
-
-       if test "$SubnetId" != "null"; then
-         echo "subnet [$sb_name] found, sn-id: $SubnetId"
-         cat << HERE > $cache_root_dir/state.json
-         { 
-            "sn-id": "$SubnetId" 
-         }
-       HERE 
-       else
-         echo "subnet not found"
-         cat << HERE > $cache_root_dir/state.json
-         { 
-            "sn-id": "" 
-         }
-       HERE
-        echo "hhhhh"
-       fi  
+     plugin: aws-subnet
+     config: 
+       action: get 
   -
     name: get-ec2
     language: Bash
