@@ -108,7 +108,7 @@ tasks:
         action: create
      if:
       language: Raku
-       code: |
+      code: |
         if config()<tasks><get-sn><state><sn-id> {
           update_state %( 
             state => "skip"
