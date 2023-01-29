@@ -101,25 +101,19 @@ tasks:
       cat ~/.aws/config 
   - 
      name: create-sn
+     plugin: aws-subnet
      config:
         cidr_block: 10.0.0.0/24
         vpc_id: vpc-93c359f7
-     language: Raku
-     init: |
-      run_task "create" unless config()<tasks><get-sn><state><sn-id>;
-     subtasks:
-      -
-        name: create
-        language: Bash
-        code: |
-          set -e
-
-          sb_name=$(config sb_name)
-          cidr_block=$(config cidr_block)
-          vpc_id=$(config vpc_id)
-
-          aws ec2 create-subnet --vpc-id $vpc_id --cidr-block $cidr_block \
-          --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=$sb_name}]'
+        action: create
+     if:
+      language: Raku
+       code: |
+        if config()<tasks><get-sn><state><sn-id> {
+          update_state %( 
+            state => "skip"
+          )
+        }
      depends:
       -
         name: get-sn
