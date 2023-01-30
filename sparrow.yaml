@@ -39,7 +39,7 @@ tasks:
       -  # get ec2
          name: get-ec2
          queue: aws
-         priority: 700
+         priority: 500
          config:
           name: host_01
       -
