@@ -89,6 +89,7 @@ tasks:
      config:
         cidr_block: 10.0.0.0/24
         vpc_id: vpc-93c359f7
+        sb_name: subnet_01
         action: create
      if:
         language: Raku
