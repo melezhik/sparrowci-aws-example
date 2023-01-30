@@ -16,13 +16,20 @@ tasks:
            update_state %( status => "skip" );
         }
     plugin: aws-ec2
-    config:
-      action: create
-      name: host_01
-      type: t2.micro
-      subnet_id: foobarbaz
-      image: ami-0e322da50e0e90e21
-      
+    hub:
+      language: Raku
+      code: |
+        update_state %(
+          list => [{
+            config => {
+              action => "create",
+              name => "host_01",
+              type => "t2.micro" 
+              subnet_id => config()<tasks><state><get-sn><sn-id>, 
+              image => "ami-0e322da50e0e90e21",
+          },
+         }],
+       );
     depends:
       -
          # install aws-cli
